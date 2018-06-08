@@ -25,6 +25,7 @@
 #define STATICLIB_FRAME_HPP
 
 #include <cstdint>
+#include <array>
 #include <limits>
 
 #include "staticlib/support.hpp"
@@ -130,6 +131,29 @@ public:
 
     masked_payload_source payload_unmasked() {
         return masked_payload_source({view.data() + payload_pos(), payload_len}, mask);
+    }
+
+    static sl::io::span<char> make_header(std::array<char, 10>& buf, frame_type fr_type, size_t pl_len,
+            bool masked = false, bool partial = false) {
+        uint8_t mask_byte = !masked ? 0 : (1<<7);
+        buf[0] = (!partial ? (1<<7) : 0) | static_cast<uint8_t>(fr_type);
+        if (pl_len < (1<<7) - 2) {
+            buf[1] = mask_byte | pl_len;
+            return sl::io::make_span(buf.data(), 2);
+        } else {
+            auto sink = sl::io::memory_sink({buf.data() + 2, buf.size() - 2});
+            if(pl_len < (1<<16)) {
+                auto val = mask_byte | ((1<<7) - 2);
+                buf[1] = static_cast<uint8_t>(val);
+                sl::endian::write_16_be(sink, pl_len);
+                return sl::io::make_span(buf.data(), 4);
+            } else {
+                auto val = mask_byte | ((1<<7) - 1);
+                buf[1] = static_cast<uint8_t>(val);
+                sl::endian::write_64_be(sink, pl_len);
+                return sl::io::make_span(buf.data(), buf.size());
+            }
+        }
     }
 
 private:

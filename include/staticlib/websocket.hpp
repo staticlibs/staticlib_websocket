@@ -27,6 +27,9 @@
 #include "staticlib/config.hpp"
 
 #include "staticlib/websocket/frame.hpp"
+#include "staticlib/websocket/frame_type.hpp"
+#include "staticlib/websocket/handshake.hpp"
+#include "staticlib/websocket/masked_payload_source.hpp"
 
 
 #endif /* STATICLIB_WEBSOCKET_HPP */
