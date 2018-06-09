@@ -21,8 +21,8 @@
  * Created on June 7, 2018, 2:05 PM
  */
 
-#ifndef STATICLIB_FRAME_TYPE_HPP
-#define STATICLIB_FRAME_TYPE_HPP
+#ifndef STATICLIB_WEBSOCKET_FRAME_TYPE_HPP
+#define STATICLIB_WEBSOCKET_FRAME_TYPE_HPP
 
 #include <cstdint>
 
@@ -55,5 +55,5 @@ frame_type make_frame_type(IntType val) {
 } // namespace
 }
 
-#endif /* STATICLIB_FRAME_TYPE_HPP */
+#endif /* STATICLIB_WEBSOCKET_FRAME_TYPE_HPP */
 

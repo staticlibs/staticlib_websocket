@@ -21,8 +21,8 @@
  * Created on June 7, 2018, 12:25 PM
  */
 
-#ifndef STATICLIB_FRAME_HPP
-#define STATICLIB_FRAME_HPP
+#ifndef STATICLIB_WEBSOCKET_FRAME_HPP
+#define STATICLIB_WEBSOCKET_FRAME_HPP
 
 #include <cstdint>
 #include <array>
@@ -121,7 +121,7 @@ public:
         return payload_len;
     }
 
-    sl::io::span<const char> payload_plain() {
+    sl::io::span<const char> payload() {
         if(well_formed && complete) {
             return sl::io::make_span(view.data() + payload_pos(), payload_len);
         } else {
@@ -157,7 +157,7 @@ public:
     }
 
 private:
-    
+
     void check_min_len() {
         if (view.size() < prefix_len) {
             this->parsing = false;
@@ -258,5 +258,5 @@ private:
 } // namespace
 }
 
-#endif /* STATICLIB_FRAME_HPP */
+#endif /* STATICLIB_WEBSOCKET_FRAME_HPP */
 

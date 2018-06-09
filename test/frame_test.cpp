@@ -62,7 +62,7 @@ void test_payload_7() {
     slassert(0x1875fdc8 == frame.mask_value());
     slassert(2 == frame.payload_length());
     slassert(8 == frame.size_bytes());
-    slassert(2 == frame.payload_plain().size());
+    slassert(2 == frame.payload().size());
     auto src = frame.payload_unmasked();
     auto sink = sl::io::string_sink();
     sl::io::copy_all(src, sink);
@@ -78,7 +78,7 @@ void test_payload_16() {
     slassert(0xa2272042 == frame.mask_value());
     slassert(128 == frame.payload_length());
     slassert(136 == frame.size_bytes());
-    slassert(128 == frame.payload_plain().size());
+    slassert(128 == frame.payload().size());
     auto src = frame.payload_unmasked();
     auto sink = sl::io::string_sink();
     auto buf = std::array<char,2>();
@@ -96,7 +96,7 @@ void test_payload_64() {
     slassert(0x2d5e9603 == frame.mask_value());
     slassert(65664 == frame.payload_length());
     slassert(65664 + 14 == frame.size_bytes());
-    slassert(65664 == frame.payload_plain().size());
+    slassert(65664 == frame.payload().size());
     auto src = frame.payload_unmasked();
     auto buf = std::array<char, 128>();
     for (size_t i = 0; i <= (1<<9); i++) {
