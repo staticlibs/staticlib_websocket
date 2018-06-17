@@ -36,11 +36,11 @@ namespace staticlib {
 namespace websocket {
 namespace handshake {
 
-std::string make_request_line(const std::string& path) {
+inline std::string make_request_line(const std::string& path) {
     return std::string("GET") + path + " HTTP/1.1";
 }
 
-std::vector<std::pair<std::string, std::string>> make_request_headers(
+inline std::vector<std::pair<std::string, std::string>> make_request_headers(
         const std::string& host, uint16_t port, const std::string& key) {
     auto src = sl::io::array_source(key.data(), key.length());
     auto key_base64 = sl::io::string_sink();
@@ -59,11 +59,11 @@ std::vector<std::pair<std::string, std::string>> make_request_headers(
     return vec;
 }
 
-std::string make_response_line() {
+inline std::string make_response_line() {
     return "HTTP/1.1 101 Switching Protocols";
 }
 
-std::vector<std::pair<std::string, std::string>> make_response_headers(
+inline std::vector<std::pair<std::string, std::string>> make_response_headers(
         const std::string& key) {
     auto concatted = key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
     auto src = sl::io::array_source(concatted.data(), concatted.length());

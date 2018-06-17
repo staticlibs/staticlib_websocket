@@ -51,6 +51,7 @@ void test_empty() {
     slassert(0xbe8b6908 == frame.mask_value());
     slassert(0 == frame.payload_length());
     slassert(6 == frame.size_bytes());
+    slassert("8180be8b6908" == frame.header_hex());
 }
 
 void test_payload_7() {
@@ -67,6 +68,7 @@ void test_payload_7() {
     auto sink = sl::io::string_sink();
     sl::io::copy_all(src, sink);
     slassert("hi" == sink.get_string());
+    slassert("81821875fdc8" == frame.header_hex());
 }
 
 void test_payload_16() {
@@ -84,6 +86,7 @@ void test_payload_16() {
     auto buf = std::array<char,2>();
     sl::io::copy_all(src, sink, buf);
     slassert(lorem_128_plain == sink.get_string());
+    slassert("81fe0080a2272042" == frame.header_hex());
 }
 
 void test_payload_64() {
@@ -103,6 +106,7 @@ void test_payload_64() {
         src.read(buf);
         slassert(lorem_128_plain == std::string(buf.data(), buf.size()));
     }
+    slassert("81ff00000000000100802d5e9603" == frame.header_hex());
 }
 
 void check_incomplete(const std::string& hex) {
@@ -110,6 +114,7 @@ void check_incomplete(const std::string& hex) {
     auto frame = sl::websocket::frame(st);
     slassert(frame.is_well_formed())
     slassert(!frame.is_complete())
+    slassert(frame.header().size() <= st.size());
 }
 
 void test_incomplete() {

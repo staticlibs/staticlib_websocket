@@ -121,12 +121,28 @@ public:
         return payload_len;
     }
 
+    sl::io::span<const char> header() {
+        auto ppos = payload_pos();
+        auto len = ppos <= view.size() ? ppos : view.size();
+        return sl::io::make_span(view.data(), len);
+    }
+
+    std::string header_hex() {
+        auto head = header();
+        auto st = std::string(head.data(), head.size());
+        return sl::io::string_to_hex(st);
+    }
+
     sl::io::span<const char> payload() {
         if(well_formed && complete) {
             return sl::io::make_span(view.data() + payload_pos(), payload_len);
         } else {
             return sl::io::span<const char>(nullptr, 0);
         }
+    }
+
+    sl::io::span<const char> raw_view() {
+        return view;
     }
 
     masked_payload_source payload_unmasked() {
