@@ -60,8 +60,6 @@ namespace websocket {
  */
 
 class frame {
-    static const size_t prefix_len = 2;
-
     sl::io::span<const char> view;
 
     bool parsing = true;
@@ -75,6 +73,8 @@ class frame {
     uint32_t payload_len = 0;
     bool masked = false;
     uint32_t mask = 0;
+
+    static const size_t prefix_len = 2;
 
 public:
     frame(sl::io::span<const char> data_view) :
@@ -146,7 +146,10 @@ public:
     }
 
     masked_payload_source payload_unmasked() {
-        return masked_payload_source({view.data() + payload_pos(), payload_len}, mask);
+        auto span = complete ?
+            sl::io::make_span(view.data() + payload_pos(), payload_len) :
+            sl::io::span<const char>(nullptr, 0);
+        return masked_payload_source(span, mask);
     }
 
     static sl::io::span<char> make_header(std::array<char, 10>& buf, frame_type fr_type, size_t pl_len,

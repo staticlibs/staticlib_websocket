@@ -160,6 +160,9 @@ void test_make_header() {
     sl::websocket::frame::make_header(buf, sl::websocket::frame_type::text, 0);
     slassert("8100" == sl::io::string_to_hex({buf.data(), 2}));
     std::memset(buf.data(), buf.size(), '\0');
+    sl::websocket::frame::make_header(buf, sl::websocket::frame_type::close, 2);
+    slassert("8802" == sl::io::string_to_hex({buf.data(), 2}));
+    std::memset(buf.data(), buf.size(), '\0');
     sl::websocket::frame::make_header(buf, sl::websocket::frame_type::text, 0, true);
     slassert("8180" == sl::io::string_to_hex({buf.data(), 2}));
     std::memset(buf.data(), buf.size(), '\0');
