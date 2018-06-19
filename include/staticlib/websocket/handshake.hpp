@@ -37,7 +37,7 @@ namespace websocket {
 namespace handshake {
 
 inline std::string make_request_line(const std::string& path) {
-    return std::string("GET") + path + " HTTP/1.1";
+    return std::string("GET ") + path + " HTTP/1.1\r\n";
 }
 
 inline std::vector<std::pair<std::string, std::string>> make_request_headers(
@@ -60,7 +60,7 @@ inline std::vector<std::pair<std::string, std::string>> make_request_headers(
 }
 
 inline std::string make_response_line() {
-    return "HTTP/1.1 101 Switching Protocols";
+    return "HTTP/1.1 101 Switching Protocols\r\n";
 }
 
 inline std::vector<std::pair<std::string, std::string>> make_response_headers(

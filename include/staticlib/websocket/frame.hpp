@@ -109,8 +109,12 @@ public:
         return masked;
     }
 
-    uint32_t size_bytes() {
-        return payload_pos() + payload_len;
+    const char* data() {
+        return view.data();
+    }
+
+    uint32_t size() {
+        return complete ? payload_pos() + payload_len : 0;
     }
 
     uint32_t mask_value() {
@@ -139,10 +143,6 @@ public:
         } else {
             return sl::io::span<const char>(nullptr, 0);
         }
-    }
-
-    sl::io::span<const char> raw_view() {
-        return view;
     }
 
     masked_payload_source payload_unmasked() {
