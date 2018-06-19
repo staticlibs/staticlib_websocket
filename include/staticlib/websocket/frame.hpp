@@ -134,7 +134,7 @@ public:
     std::string header_hex() {
         auto head = header();
         auto st = std::string(head.data(), head.size());
-        return sl::io::string_to_hex(st);
+        return sl::io::hex_from_string(st);
     }
 
     sl::io::span<const char> payload() {
