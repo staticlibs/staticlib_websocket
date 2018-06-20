@@ -155,41 +155,41 @@ void test_not_well_formed() {
 void test_make_header() {
     auto buf = std::array<char, 10>();
     // payload_7
-    std::memset(buf.data(), buf.size(), '\0');
+    std::memset(buf.data(), '\0', buf.size());
     sl::websocket::frame::make_header(buf, sl::websocket::frame_type::text, 0);
     slassert("8100" == sl::io::string_to_hex({buf.data(), 2}));
-    std::memset(buf.data(), buf.size(), '\0');
+    std::memset(buf.data(), '\0', buf.size());
     sl::websocket::frame::make_header(buf, sl::websocket::frame_type::close, 2);
     slassert("8802" == sl::io::string_to_hex({buf.data(), 2}));
-    std::memset(buf.data(), buf.size(), '\0');
+    std::memset(buf.data(), '\0', buf.size());
     sl::websocket::frame::make_header(buf, sl::websocket::frame_type::text, 0, true);
     slassert("8180" == sl::io::string_to_hex({buf.data(), 2}));
-    std::memset(buf.data(), buf.size(), '\0');
+    std::memset(buf.data(), '\0', buf.size());
     sl::websocket::frame::make_header(buf, sl::websocket::frame_type::text, 0, true, true);
     slassert("0180" == sl::io::string_to_hex({buf.data(), 2}));
     sl::websocket::frame::make_header(buf, sl::websocket::frame_type::text, 1);
     slassert("8101" == sl::io::string_to_hex({buf.data(), 2}));
-    std::memset(buf.data(), buf.size(), '\0');
+    std::memset(buf.data(), '\0', buf.size());
     sl::websocket::frame::make_header(buf, sl::websocket::frame_type::text, 125);
     slassert("817d" == sl::io::string_to_hex({buf.data(), 2}));
-    std::memset(buf.data(), buf.size(), '\0');
+    std::memset(buf.data(), '\0', buf.size());
     sl::websocket::frame::make_header(buf, sl::websocket::frame_type::text, 125, true);
     slassert("81fd" == sl::io::string_to_hex({buf.data(), 2}));
     // payload_16
-    std::memset(buf.data(), buf.size(), '\0');
+    std::memset(buf.data(), '\0', buf.size());
     sl::websocket::frame::make_header(buf, sl::websocket::frame_type::text, 126);
     slassert("817e007e" == sl::io::string_to_hex({buf.data(), 4}));
-    std::memset(buf.data(), buf.size(), '\0');
+    std::memset(buf.data(), '\0', buf.size());
     sl::websocket::frame::make_header(buf, sl::websocket::frame_type::text, 257);
     slassert("817e0101" == sl::io::string_to_hex({buf.data(), 4}));
-    std::memset(buf.data(), buf.size(), '\0');
+    std::memset(buf.data(), '\0', buf.size());
     sl::websocket::frame::make_header(buf, sl::websocket::frame_type::text, 65535);
     slassert("817effff" == sl::io::string_to_hex({buf.data(), 4}));
     // payload_64
-    std::memset(buf.data(), buf.size(), '\0');
+    std::memset(buf.data(), '\0', buf.size());
     sl::websocket::frame::make_header(buf, sl::websocket::frame_type::text, 65536);
     slassert("817f0000000000010000" == sl::io::string_to_hex({buf.data(), 10}));
-    std::memset(buf.data(), buf.size(), '\0');
+    std::memset(buf.data(), '\0', buf.size());
     sl::websocket::frame::make_header(buf, sl::websocket::frame_type::text, 65537);
     slassert("817f0000000000010001" == sl::io::string_to_hex({buf.data(), 10}));
 }
