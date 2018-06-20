@@ -31,6 +31,10 @@
 namespace staticlib {
 namespace websocket {
 
+/**
+ * `Source` implementation that can be used to unmask the payload
+ * value in a streaming mode
+ */
 class masked_payload_source {
     /**
      * Input source
@@ -79,7 +83,7 @@ public:
     }
 
     /**
-     * Unmasking implementation
+     * Unmasking read implementation
      * 
      * @param span buffer span
      * @return number of bytes processed

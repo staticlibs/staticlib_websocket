@@ -115,8 +115,6 @@ script:
     $D make ;
     $D sh -c "rm -rf /root && mkdir /root" ;
     $D cmake /src/staticlib_websocket/test -DSTATICLIB_TOOLCHAIN=linux_amd64_gcc -DCMAKE_BUILD_TYPE=Release ;
-    $D mkdir /test ;
-    $D cp -r /src/staticlib_websocket/test/certificates /test/ ;
     $D make all test ;
 
     `# Android` ;

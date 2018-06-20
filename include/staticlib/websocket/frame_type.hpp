@@ -29,16 +29,46 @@
 namespace staticlib {
 namespace websocket {
 
+/**
+ * Frame type
+ */
 enum class frame_type {
+    /**
+     * Continuation frame
+     */
     continuation = 0x0,
+    /**
+     * Text frame
+     */
     text = 0x1,
+    /**
+     * Binary frame
+     */
     binary = 0x2,
+    /**
+     * Close frame
+     */
     close = 0x8,
+    /**
+     * Ping frame
+     */
     ping = 0x9,
+    /**
+     * Pong frame
+     */
     pong = 0xa,
+    /**
+     * Invalid value - used by default
+     */
     invalid = 0xf
 };
 
+/**
+ * Get frame type from integer value, `invalid` type is used by default
+ * 
+ * @param val integer value
+ * @return frame type
+ */
 template<typename IntType>
 frame_type make_frame_type(IntType val) {
     switch(val) {

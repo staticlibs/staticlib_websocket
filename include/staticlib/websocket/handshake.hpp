@@ -36,10 +36,24 @@ namespace staticlib {
 namespace websocket {
 namespace handshake {
 
+/**
+ * Creates handshake request line
+ * 
+ * @param path URL path to connect to
+ * @return request line
+ */
 inline std::string make_request_line(const std::string& path) {
     return std::string("GET ") + path + " HTTP/1.1\r\n";
 }
 
+/**
+ * Creates a list of header for a handshake request
+ * 
+ * @param host IP address or host name to connect to
+ * @param port TCP port to connect to
+ * @param key MUST be a nonce consisting of a randomly selected 16-byte value
+ * @return list of headers
+ */
 inline std::vector<std::pair<std::string, std::string>> make_request_headers(
         const std::string& host, uint16_t port, const std::string& key) {
     auto src = sl::io::array_source(key.data(), key.length());
@@ -59,10 +73,21 @@ inline std::vector<std::pair<std::string, std::string>> make_request_headers(
     return vec;
 }
 
+/**
+ * Creates handshake response line
+ * 
+ * @return handshake response line
+ */
 inline std::string make_response_line() {
     return "HTTP/1.1 101 Switching Protocols\r\n";
 }
 
+/**
+ * Creates a list of headers for a handshake response
+ * 
+ * @param key value of the `Sec-WebSocket-Key` request header
+ * @return list of headers
+ */
 inline std::vector<std::pair<std::string, std::string>> make_response_headers(
         const std::string& key) {
     auto concatted = key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";

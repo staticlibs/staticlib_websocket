@@ -59,24 +59,76 @@ namespace websocket {
  +---------------------------------------------------------------+
  */
 
+/**
+ * This class represents a WebSocket frame. It doesn't own the underlying buffer.
+ */
 class frame {
+    /**
+     * Span that points to the buffer, that contains one or
+     * more WebSocket frames.
+     */
     sl::io::span<const char> view;
 
+    /**
+     * Flag used during the parsing to represent the
+     * parsing failure
+     */
     bool parsing = true;
+    /**
+     * Flag shows whether the frame is invalid (corrupted),
+     * incomplete frames are deemed well-formed unless invalid
+     * frame structure is detected
+     */
     bool well_formed = true;
+    /**
+     * Flag shows that the frame was successfully parsed
+     * and can be used in the application
+     */
     bool complete = false;
 
+    /**
+     * Flag shows whether `final` bit is set in frame
+     */
     bool final = false;
+    /**
+     * Frame type
+     */
     frame_type ftype = frame_type::invalid;
+    /**
+     * Length of the payload as specified in header,
+     * only valid for values under 126 bytes
+     */
     uint8_t payload_len_7 = 0;
+    /**
+     * Size of the extended payload length field (0, 2 or 8 bytes)
+     */
     uint8_t ex_payload_len_field_size = 0;
+    /**
+     * Payload length
+     */
     uint32_t payload_len = 0;
+    /**
+     * Flag shows whether this frame is masked (came from client)
+     */
     bool masked = false;
+    /**
+     * Mask value
+     */
     uint32_t mask = 0;
 
+    /**
+     * Size of the mandatory frame header
+     */
     static const size_t prefix_len = 2;
 
 public:
+    /**
+     * Constructor, takes a span that should point to a buffer
+     * containing one or more frames. Buffer must remain valid during all
+     * the frame use.
+     * 
+     * @param data_view span pointing to buffer with one or more frames
+     */
     frame(sl::io::span<const char> data_view) :
     view(data_view) {
         check_min_len();
@@ -89,54 +141,119 @@ public:
         check_complete();
     }
 
+    /**
+     * Flag shows whether the frame is invalid (corrupted),
+     * incomplete frames are deemed well-formed unless invalid
+     * frame structure is detected
+     * 
+     * @return `true` if frame is valid, `false` otherwise
+     */
     bool is_well_formed() {
         return well_formed;
     }
 
+    /**
+     * Flag shows that the frame was successfully parsed
+     * and can be used in the application
+     * 
+     * @return whether parsing completed successfully
+     */
     bool is_complete() {
         return complete;
     }
 
+    /**
+     * Flag shows whether `final` bit is set in frame
+     * 
+     * @return whether `final` bit is set in frame
+     */
     bool is_final() {
         return final;
     }
 
+    /**
+     * Frame type (opcode)
+     * 
+     * @return opcode
+     */
     frame_type type() {
         return ftype;
     }
 
+    /**
+     * Flag shows whether this frame is masked (came from client)
+     * 
+     * @return `true`if masked, `false` otherwise
+     */
     bool is_masked() {
         return masked;
     }
 
+    /**
+     * Pointer to the underlying buffer
+     * 
+     * @return pointer to the underlying buffer
+     */
     const char* data() {
         return view.data();
     }
 
+    /**
+     * Size of this frame (header + payload)
+     * 
+     * @return frame size for complete frames, zero for incomplete ones
+     */
     uint32_t size() {
         return complete ? payload_pos() + payload_len : 0;
     }
 
+    /**
+     * Mask value
+     * 
+     * @return mask value
+     */
     uint32_t mask_value() {
         return mask;
     }
 
+    /**
+     * Payload length in bytes
+     * 
+     * @return payload length in bytes
+     */
     uint32_t payload_length() {
         return payload_len;
     }
 
+    /**
+     * Span that points to the header, for incomplete
+     * frames - points to the part of the header
+     * that is available
+     * 
+     * @return span that points to the header
+     */
     sl::io::span<const char> header() {
         auto ppos = payload_pos();
         auto len = ppos <= view.size() ? ppos : view.size();
         return sl::io::make_span(view.data(), len);
     }
 
+    /**
+     * Header in Hexadecimal format
+     * 
+     * @return header in Hexadecimal format
+     */
     std::string header_hex() {
         auto head = header();
         auto st = std::string(head.data(), head.size());
         return sl::io::hex_from_string(st);
     }
 
+    /**
+     * Span that points to the (possibly masked) payload
+     * 
+     * @return payload span
+     */
     sl::io::span<const char> payload() {
         if(well_formed && complete) {
             return sl::io::make_span(view.data() + payload_pos(), payload_len);
@@ -145,6 +262,11 @@ public:
         }
     }
 
+    /**
+     * Source, that allows to read the unmasked payload
+     * 
+     * @return unmasked payload source
+     */
     masked_payload_source payload_unmasked() {
         auto span = complete ?
             sl::io::make_span(view.data() + payload_pos(), payload_len) :
@@ -152,6 +274,16 @@ public:
         return masked_payload_source(span, mask);
     }
 
+    /**
+     * Creates a frame header and writes it into the specified buffer
+     * 
+     * @param buf dest buffer
+     * @param fr_type frame type
+     * @param pl_len length of the payload that will be sent with this frame
+     * @param masked whether payload will be masked
+     * @param partial whether the `final` bit needs to be set to `0`
+     * @return header span that points to dest buffer
+     */
     static sl::io::span<char> make_header(std::array<char, 10>& buf, frame_type fr_type, size_t pl_len,
             bool masked = false, bool partial = false) {
         uint8_t mask_byte = !masked ? 0 : (1<<7);
