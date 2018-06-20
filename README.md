@@ -11,7 +11,7 @@ This library implements primitives (frame and handshake) for [RFC 6455 - The Web
 This library is header-only and depends on [staticlib_crypto](https://github.com/staticlibs/staticlib_crypto)
 (that required OpenSSL) and [staticlib_endian](https://github.com/staticlibs/staticlib_endian).
 
-Link to the [API documentation](http://staticlibs.github.io/staticlib_io/docs/html/namespacestaticlib_1_1websocket.html).
+Link to the [API documentation](http://staticlibs.github.io/staticlib_websocket/docs/html/namespacestaticlib_1_1websocket.html).
 
 License information
 -------------------
