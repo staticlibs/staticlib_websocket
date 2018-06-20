@@ -39,6 +39,7 @@ if ( NOT DEFINED STATICLIB_TOOLCHAIN )
     staticlib_websocket_add_subdirectory ( ${CMAKE_CURRENT_LIST_DIR}/../staticlib_support )
     staticlib_websocket_add_subdirectory ( ${CMAKE_CURRENT_LIST_DIR}/../staticlib_io )
     staticlib_websocket_add_subdirectory ( ${CMAKE_CURRENT_LIST_DIR}/../staticlib_endian )
+    staticlib_websocket_add_subdirectory ( ${CMAKE_CURRENT_LIST_DIR}/../staticlib_crypto )
 endif ( )
 
 # dependencies
