@@ -204,7 +204,7 @@ public:
      * @return frame size for complete frames, zero for incomplete ones
      */
     uint32_t size() {
-        return complete ? payload_pos() + payload_len : 0;
+        return static_cast<uint32_t>(complete ? payload_pos() + payload_len : 0);
     }
 
     /**
@@ -289,7 +289,7 @@ public:
         uint8_t mask_byte = !masked ? 0 : (1<<7);
         buf[0] = (!partial ? (1<<7) : 0) | static_cast<uint8_t>(fr_type);
         if (pl_len < (1<<7) - 2) {
-            buf[1] = mask_byte | pl_len;
+            buf[1] = static_cast<char>(mask_byte | pl_len);
             return sl::io::make_span(buf.data(), 2);
         } else {
             auto sink = sl::io::memory_sink({buf.data() + 2, buf.size() - 2});
