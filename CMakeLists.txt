@@ -15,7 +15,7 @@
 cmake_minimum_required ( VERSION 2.8.12 )
 
 project ( staticlib_websocket CXX )
-set ( ${PROJECT_NAME}_STATICLIB_VERSION 1.0.0 )
+set ( ${PROJECT_NAME}_STATICLIB_VERSION 1.0.1 )
 set ( ${PROJECT_NAME}_DESCRIPTION "Staticlibs WebSocket library" )
 set ( ${PROJECT_NAME}_URL https://github.com/staticlibs/staticlib_websocket )
 include ( ${CMAKE_CURRENT_LIST_DIR}/resources/macros.cmake )
